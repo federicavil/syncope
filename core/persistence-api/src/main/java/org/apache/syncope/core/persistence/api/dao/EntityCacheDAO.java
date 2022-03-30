@@ -16,35 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.syncope.client.console.commons;
+package org.apache.syncope.core.persistence.api.dao;
 
-import java.util.Date;
-import org.apache.syncope.client.console.SyncopeConsoleSession;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
+import java.util.Map;
 
-public class DateFormatROModel implements IModel<String> {
+public interface EntityCacheDAO {
 
-    private static final long serialVersionUID = 6677274580927636121L;
+    Map<String, Object> getStatistics();
 
-    private final PropertyModel model;
+    void enableStatistics();
 
-    public DateFormatROModel(final PropertyModel model) {
-        this.model = model;
-    }
+    void disableStatistics();
 
-    @Override
-    public String getObject() {
-        return model.getObject() == null
-                ? ""
-                : SyncopeConsoleSession.get().getDateFormat().format((Date) model.getObject());
-    }
+    void resetStatistics();
 
-    @Override
-    public void setObject(final String object) {
-    }
-
-    @Override
-    public void detach() {
-    }
+    void clearCache();
 }

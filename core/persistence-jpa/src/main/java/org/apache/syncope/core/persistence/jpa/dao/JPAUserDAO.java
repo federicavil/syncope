@@ -18,9 +18,9 @@
  */
 package org.apache.syncope.core.persistence.jpa.dao;
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +130,7 @@ public class JPAUserDAO extends AbstractAnyDAO<User> implements UserDAO {
 
     @Transactional(readOnly = true)
     @Override
-    public Date findLastChange(final String key) {
+    public OffsetDateTime findLastChange(final String key) {
         return findLastChange(key, JPAUser.TABLE);
     }
 
@@ -317,13 +317,13 @@ public class JPAUserDAO extends AbstractAnyDAO<User> implements UserDAO {
         findAllResources(user).stream().
                 map(ExternalResource::getAccountPolicy).
                 filter(Objects::nonNull).
-                forEachOrdered(policies::add);
+                forEach(policies::add);
 
         // add realm policies
         realmDAO.findAncestors(user.getRealm()).stream().
                 map(Realm::getAccountPolicy).
                 filter(Objects::nonNull).
-                forEachOrdered(policies::add);
+                forEach(policies::add);
 
         return policies;
     }
@@ -533,7 +533,7 @@ public class JPAUserDAO extends AbstractAnyDAO<User> implements UserDAO {
         query.getResultList().stream().map(resultKey -> resultKey instanceof Object[]
                 ? (String) ((Object[]) resultKey)[0]
                 : ((String) resultKey)).
-                forEachOrdered(roleKey -> {
+                forEach(roleKey -> {
                     Role role = roleDAO.find(roleKey.toString());
                     if (role == null) {
                         LOG.error("Could not find role {}, even though returned by the native query", roleKey);
