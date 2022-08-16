@@ -233,7 +233,8 @@ under the License.
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
         <inherited>true</inherited>
-        <executions>
+        <!-- NEXT LINES COMMENTED BY ME-->
+        <!-- <executions>
           <execution>
             <id>setupCSV</id>
             <phase>pre-integration-test</phase>
@@ -246,7 +247,7 @@ under the License.
               <goal>run</goal>
             </goals>
           </execution>
-        </executions>
+        </executions> -->
       </plugin>
 
       <plugin>
