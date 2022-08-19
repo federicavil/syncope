@@ -2,15 +2,33 @@ package org.apache.syncope.core.spring.utils;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import com.google.common.hash.Hashing;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.syncope.common.lib.types.CipherAlgorithm;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 public class EncryptorOracle {
 
     private static final String key = "dfe0855edfmsh485836b5158bba7p10f2ddjsn68761a02af10";
 
     public static boolean verify(String plainText, String cipherText, CipherAlgorithm cipher){
+        switch(cipher){
+            case BCRYPT:
+                return BCrypt.verifyer().verify(plainText.toCharArray(), cipherText).verified;
+            default:
+                return encode(plainText,cipher).equalsIgnoreCase(cipherText);
+        }
+    }
+
+    public static String encode(String plainText, CipherAlgorithm cipher){
         String encryptedString = null;
         switch(cipher){
             case SMD5:
@@ -31,15 +49,25 @@ public class EncryptorOracle {
                 encryptedString = Hashing.sha512().hashString(plainText, StandardCharsets.UTF_8).toString();
                 break;
             case BCRYPT:
-                return BCrypt.verifyer().verify(plainText.toCharArray(), cipherText).verified;
+                encryptedString = BCrypt.withDefaults().hashToString(10, plainText.toCharArray());
+                break;
             case AES:
-                //TODO
+                try {
+                    Cipher ciph = Cipher.getInstance("AES");
+                    SecretKeySpec key = new SecretKeySpec(ArrayUtils.subarray(
+                            "1abcdefghilmnopqrstuvz2!".getBytes(StandardCharsets.UTF_8), 0, 16),
+                            CipherAlgorithm.AES.getAlgorithm());
+                    ciph.init(Cipher.ENCRYPT_MODE,key);
+                    encryptedString = Base64.getEncoder()
+                            .encodeToString(ciph.doFinal(plainText.getBytes(StandardCharsets.UTF_8)));
+                } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
+                    e.printStackTrace();
+                }
+                break;
 
         }
-        return encryptedString.equalsIgnoreCase(cipherText);
+        return encryptedString;
     }
-
-
 
     public static String getKey(){
         return key;

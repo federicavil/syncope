@@ -388,6 +388,18 @@ under the License.
   </contributors>
 
   <properties>
+
+    <!--Jacoco & sonarcloud-->
+
+    <sonar.coverage.jacoco.xmlReportPaths>../jacocoTests/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.organization>federicavil</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+
+    <!--da togliere-->
+    <sonar.internal.analysis.dbd>false</sonar.internal.analysis.dbd>
+
+
+
     <project.build.outputTimestamp>2021-07-16T09:00:00Z</project.build.outputTimestamp>
     <syncope.version>${project.version}</syncope.version>
 
@@ -409,7 +421,7 @@ under the License.
 
     <jackson.version>2.13.2</jackson.version>
 
-    <spring-boot.version>2.6.5</spring-boot.version>
+    <spring-boot.version>2.6.6</spring-boot.version>
     <spring-cloud-gateway.version>3.1.1</spring-cloud-gateway.version>
 
     <openjpa.version>3.2.2</openjpa.version>
@@ -417,8 +429,6 @@ under the License.
     <bval.version>2.0.5</bval.version>
 
     <jasypt.version>1.9.3</jasypt.version>
-
-    <quartz.version>2.3.2</quartz.version>
 
     <cocoon.version>3.0.0-alpha-3</cocoon.version>
 
@@ -437,7 +447,7 @@ under the License.
 
     <log4j2.version>2.17.2</log4j2.version>
     <disruptor.version>3.4.4</disruptor.version>
-    
+
     <commons-jexl.version>3.2.1</commons-jexl.version>
     <commons-lang.version>3.12.0</commons-lang.version>
     <commons-text.version>1.9</commons-text.version>
@@ -448,7 +458,7 @@ under the License.
 
     <pac4j.version>5.3.1</pac4j.version>
 
-    <cas.version>6.5.1</cas.version>
+    <cas.version>6.5.2</cas.version>
     <cas-client.version>3.6.4</cas-client.version>
 
     <h2.version>1.4.200</h2.version>
@@ -467,7 +477,7 @@ under the License.
     <jsplumb.version>2.0.7</jsplumb.version>
     <chartjs.version>1.0.2</chartjs.version>
 
-    <wicket.version>9.8.0</wicket.version>
+    <wicket.version>9.9.0</wicket.version>
     <wicketstuff.version>9.8.0</wicketstuff.version>
     <wicket-jqueryui.version>9.8.0</wicket-jqueryui.version>
     <wicket-bootstrap.version>5.0.6</wicket-bootstrap.version>
@@ -518,7 +528,7 @@ under the License.
     <jdbc.oracle.version>21.5.0.0</jdbc.oracle.version>
 
     <conf.directory>${project.build.directory}/test-classes</conf.directory>
-    <bundles.directory>${project.build.directory}/bundles</bundles.directory>
+    <bundles.directory>${project.build.directory}\bundles</bundles.directory>
     <connid.location>file:${bundles.directory}/</connid.location>
     <log.directory>${project.build.directory}/log</log.directory>
 
@@ -534,7 +544,7 @@ under the License.
     Surefire plugin argLine can be defined as a Maven property to avoid JVM errors on startup with no jacaco-maven-plugin
     https://www.eclemma.org/jacoco/trunk/doc/prepare-agent-mojo.html
     -->
-    <argLine>-Xms512m -Xmx1024m -Xss256k</argLine>
+    <!--    <argLine>-Xms512m -Xmx1024m -Xss256k</argLine>-->
 
     <ianal.phase>verify</ianal.phase>
     <sass.skip>false</sass.skip>
@@ -542,23 +552,23 @@ under the License.
 
     <sonar.language>java</sonar.language>
     <sonar.java.source>${targetJdk}</sonar.java.source>
-    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+    <!--    <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>-->
     <sonar.junit.reportPaths>${project.build.directory}/surefire-reports</sonar.junit.reportPaths>
-    <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <!--    <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>-->
 
     <targetJdk>11</targetJdk>
     <rootpom.basedir>${basedir}</rootpom.basedir>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    
-    <sonar.organization>federicavil</sonar.organization>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <sonar.coverage.jacoco.xmlReportPaths>../tests-coverage/target/site/jacoco-aggregate/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-
   </properties>
 
   <dependencyManagement>
 
     <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
       <dependency>
         <groupId>jakarta.validation</groupId>
         <artifactId>jakarta.jakarta.validation-api</artifactId>
@@ -925,6 +935,18 @@ under the License.
 
       <dependency>
         <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-quartz</artifactId>
+        <version>${spring-boot.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-logging</artifactId>
         <exclusions>
           <exclusion>
@@ -1121,12 +1143,6 @@ under the License.
         <groupId>org.apache.directory.server</groupId>
         <artifactId>apacheds-core-annotations</artifactId>
         <version>${apacheds.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.directory.server</groupId>
@@ -1149,38 +1165,12 @@ under the License.
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
         <version>1.6.7</version>
-        <exclusions>
-          <exclusion>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
 
       <dependency>
         <groupId>org.jasypt</groupId>
         <artifactId>jasypt</artifactId>
         <version>${jasypt.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.quartz-scheduler</groupId>
-        <artifactId>quartz</artifactId>
-        <version>${quartz.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP-java7</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.mchange</groupId>
-            <artifactId>c3p0</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.mchange</groupId>
-            <artifactId>mchange-commons-java</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
 
       <dependency>
@@ -1904,15 +1894,6 @@ under the License.
         <version>${slf4j.version}</version>
         <scope>test</scope>
       </dependency>
-
-      <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>4.6.1</version>
-        <scope>test</scope>
-      </dependency>
-
     </dependencies>
 
   </dependencyManagement>
@@ -2191,16 +2172,7 @@ under the License.
           </configuration>
         </plugin>
 
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.22.2</version>
-          <configuration>
-            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-            <encoding>utf-8</encoding>
-            <runOrder>alphabetical</runOrder>
-          </configuration>
-        </plugin>
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
@@ -2270,7 +2242,7 @@ under the License.
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.8.7</version>
+          <version>0.8.6</version>
         </plugin>
 
         <plugin>
@@ -2282,6 +2254,25 @@ under the License.
     </pluginManagement>
 
     <plugins>
+      <!--spostato da pluginmanagement-->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M5</version>
+        <configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <forkCount>${forkCount.variable}</forkCount>
+          <reuseForks>false</reuseForks>
+          <trimStackTrace>false</trimStackTrace>
+          <forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
+          <rerunFailingTestsCount>${testRetryCount}</rerunFailingTestsCount>
+        </configuration>
+        <!--<configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+          <encoding>utf-8</encoding>
+          <runOrder>alphabetical</runOrder>
+        </configuration>-->
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -2345,29 +2336,6 @@ under the License.
       </plugin>
 
       <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-        <configuration>
-          <skip>${skipTests}</skip>
-        </configuration>
-        <executions>
-          <execution>
-            <id>prepare-jacoco-agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>generate-code-coverage-report</id>
-            <phase>test</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.codehaus.gmavenplus</groupId>
         <artifactId>gmavenplus-plugin</artifactId>
         <version>1.13.1</version>
@@ -2406,46 +2374,46 @@ under the License.
         </executions>
       </plugin>
 
-<!--      <plugin>-->
-<!--        <groupId>org.apache.rat</groupId>-->
-<!--        <artifactId>apache-rat-plugin</artifactId>-->
-<!--        <configuration>-->
-<!--          <excludes>-->
-<!--            <exclude>**/nbactions.xml</exclude>-->
-<!--            <exclude>**/nb-configuration.xml</exclude>-->
-<!--            <exclude>**/META-INF/cxf/**</exclude>-->
-<!--            <exclude>**/META-INF/services/**</exclude>-->
-<!--            <exclude>**/META-INF/MANIFEST.MF</exclude>-->
-<!--            <exclude>**/*.csv</exclude>-->
-<!--            <exclude>**/archetype-resources/**</exclude>-->
-<!--            <exclude>**/AdminLTE*/**</exclude>-->
-<!--            <exclude>**/goal.txt</exclude>-->
-<!--            <exclude>**/rat.txt</exclude>-->
-<!--            <exclude>**/build-copy-javadoc-files.xml</exclude>-->
-<!--            <exclude>**/maven-eclipse.xml</exclude>-->
-<!--            <exclude>**/*.iml</exclude>-->
-<!--            <exclude>**/*.log</exclude>-->
-<!--            <exclude>**/.externalToolBuilders/**</exclude>-->
-<!--            <exclude>.git/**</exclude>-->
-<!--            <exclude>.idea/**</exclude>-->
-<!--            <exclude>**/.settings/**</exclude>-->
-<!--            <exclude>**/.*</exclude>-->
-<!--            <exclude>**/*.lst</exclude>-->
-<!--            <exclude>**/*.json</exclude>-->
-<!--            <exclude>**/banner.txt</exclude>-->
-<!--            <exclude>**/target/**</exclude>-->
-<!--          </excludes>-->
-<!--        </configuration>-->
-<!--        <executions>-->
-<!--          <execution>-->
-<!--            <id>rat-check</id>-->
-<!--            <phase>verify</phase>-->
-<!--            <goals>-->
-<!--              <goal>check</goal>-->
-<!--            </goals>-->
-<!--          </execution>-->
-<!--        </executions>-->
-<!--      </plugin>-->
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/nbactions.xml</exclude>
+            <exclude>**/nb-configuration.xml</exclude>
+            <exclude>**/META-INF/cxf/**</exclude>
+            <exclude>**/META-INF/services/**</exclude>
+            <exclude>**/META-INF/MANIFEST.MF</exclude>
+            <exclude>**/*.csv</exclude>
+            <exclude>**/archetype-resources/**</exclude>
+            <exclude>**/AdminLTE*/**</exclude>
+            <exclude>**/goal.txt</exclude>
+            <exclude>**/rat.txt</exclude>
+            <exclude>**/build-copy-javadoc-files.xml</exclude>
+            <exclude>**/maven-eclipse.xml</exclude>
+            <exclude>**/*.iml</exclude>
+            <exclude>**/*.log</exclude>
+            <exclude>**/.externalToolBuilders/**</exclude>
+            <exclude>.git/**</exclude>
+            <exclude>.idea/**</exclude>
+            <exclude>**/.settings/**</exclude>
+            <exclude>**/.*</exclude>
+            <exclude>**/*.lst</exclude>
+            <exclude>**/*.json</exclude>
+            <exclude>**/banner.txt</exclude>
+            <exclude>**/target/**</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <execution>
+            <id>rat-check</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -2508,7 +2476,7 @@ under the License.
         <version>1.4</version>
         <configuration>
           <!-- Fail the build if any artifacts are missing legal files -->
-          <strict>true</strict>
+          <!--          <strict>true</strict>-->
         </configuration>
         <executions>
           <execution>
@@ -2800,7 +2768,9 @@ under the License.
 
     <profile>
       <id>skipTests</id>
-
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
       <properties>
         <skipTests>true</skipTests>
         <ianal.phase>none</ianal.phase>
@@ -2848,6 +2818,9 @@ under the License.
     </profile>
     <profile>
       <id>jacoco-coverage</id>
+      <properties>
+        <checkstyle.skip>true</checkstyle.skip>
+      </properties>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
@@ -2856,7 +2829,6 @@ under the License.
           <plugin>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.7</version>
             <executions>
               <execution>
                 <id>prepare-agent</id>
