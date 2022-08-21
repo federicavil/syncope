@@ -326,92 +326,92 @@ under the License.
   </build>
   
   <profiles>
-    <profile>
-      <id>debug</id>
-      
-      <build>
-        <defaultGoal>clean verify cargo:run</defaultGoal>
-        
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven3-plugin</artifactId>
-            <inherited>true</inherited>
-            <configuration>
-              <container>
-                <containerId>tomcat9x</containerId>
-                <zipUrlInstaller>
-                  <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>
-                  <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
-                  <extractDir>${project.build.directory}/cargo/extract</extractDir>
-                </zipUrlInstaller>
-                <timeout>300000</timeout>
-                <log>${cargo.log}</log>
-                <output>${cargo.output}</output>
-              </container>
-              <configuration>
-                <properties>
-                  <cargo.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n
-                    -XX:+CMSClassUnloadingEnabled</cargo.jvmargs>
-                </properties>
-              </configuration>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+<!--    <profile>-->
+<!--      <id>debug</id>-->
+<!--      -->
+<!--      <build>-->
+<!--        <defaultGoal>clean verify cargo:run</defaultGoal>-->
+<!--        -->
+<!--        <plugins>-->
+<!--          <plugin>-->
+<!--            <groupId>org.codehaus.cargo</groupId>-->
+<!--            <artifactId>cargo-maven3-plugin</artifactId>-->
+<!--            <inherited>true</inherited>-->
+<!--            <configuration>-->
+<!--              <container>-->
+<!--                <containerId>tomcat9x</containerId>-->
+<!--                <zipUrlInstaller>-->
+<!--                  <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>-->
+<!--                  <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>-->
+<!--                  <extractDir>${project.build.directory}/cargo/extract</extractDir>-->
+<!--                </zipUrlInstaller>-->
+<!--                <timeout>300000</timeout>-->
+<!--                <log>${cargo.log}</log>-->
+<!--                <output>${cargo.output}</output>-->
+<!--              </container>-->
+<!--              <configuration>-->
+<!--                <properties>-->
+<!--                  <cargo.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n-->
+<!--                    -XX:+CMSClassUnloadingEnabled</cargo.jvmargs>-->
+<!--                </properties>-->
+<!--              </configuration>-->
+<!--            </configuration>-->
+<!--          </plugin>-->
+<!--        </plugins>-->
+<!--      </build>-->
+<!--    </profile>-->
 
-    <profile>
-      <id>payara</id>
+<!--    <profile>-->
+<!--      <id>payara</id>-->
 
-      <dependencies>
-        <dependency>
-          <groupId>org.glassfish</groupId>
-          <artifactId>jakarta.faces</artifactId>
-          <version>${javax.faces.version}</version>
-        </dependency>
-      </dependencies>
+<!--      <dependencies>-->
+<!--        <dependency>-->
+<!--          <groupId>org.glassfish</groupId>-->
+<!--          <artifactId>jakarta.faces</artifactId>-->
+<!--          <version>${javax.faces.version}</version>-->
+<!--        </dependency>-->
+<!--      </dependencies>-->
 
-      <build>
-        <defaultGoal>clean verify cargo:run</defaultGoal>
+<!--      <build>-->
+<!--        <defaultGoal>clean verify cargo:run</defaultGoal>-->
 
-        <plugins>
-          <plugin>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <packagingExcludes>WEB-INF/lib/bval-*.jar</packagingExcludes>
-            </configuration>
-          </plugin>
+<!--        <plugins>-->
+<!--          <plugin>-->
+<!--            <artifactId>maven-war-plugin</artifactId>-->
+<!--            <configuration>-->
+<!--              <packagingExcludes>WEB-INF/lib/bval-*.jar</packagingExcludes>-->
+<!--            </configuration>-->
+<!--          </plugin>-->
 
-          <plugin>
-            <groupId>org.codehaus.cargo</groupId>
-            <artifactId>cargo-maven3-plugin</artifactId>
-            <inherited>true</inherited>
-            <configuration>
-              <container>
-                <containerId>payara</containerId>
-                <zipUrlInstaller>
-                  <url>https://repo1.maven.org/maven2/fish/payara/distributions/payara/${payara.version}/payara-${payara.version}.zip</url>
-                  <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
-                  <extractDir>${project.build.directory}/cargo/extract</extractDir>
-                </zipUrlInstaller>
-                <timeout>300000</timeout>
-                <log>${cargo.log}</log>
-                <output>${cargo.output}</output>
-              </container>
-              <configuration>
-                <properties>
-                  <cargo.glassfish.removeDefaultDatasource>false</cargo.glassfish.removeDefaultDatasource>
-                  <cargo.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n
-                    -XX:+CMSClassUnloadingEnabled</cargo.jvmargs>
-                </properties>
-              </configuration>
-              <skip>${skipTests}</skip>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+<!--          <plugin>-->
+<!--            <groupId>org.codehaus.cargo</groupId>-->
+<!--            <artifactId>cargo-maven3-plugin</artifactId>-->
+<!--            <inherited>true</inherited>-->
+<!--            <configuration>-->
+<!--              <container>-->
+<!--                <containerId>payara</containerId>-->
+<!--                <zipUrlInstaller>-->
+<!--                  <url>https://repo1.maven.org/maven2/fish/payara/distributions/payara/${payara.version}/payara-${payara.version}.zip</url>-->
+<!--                  <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>-->
+<!--                  <extractDir>${project.build.directory}/cargo/extract</extractDir>-->
+<!--                </zipUrlInstaller>-->
+<!--                <timeout>300000</timeout>-->
+<!--                <log>${cargo.log}</log>-->
+<!--                <output>${cargo.output}</output>-->
+<!--              </container>-->
+<!--              <configuration>-->
+<!--                <properties>-->
+<!--                  <cargo.glassfish.removeDefaultDatasource>false</cargo.glassfish.removeDefaultDatasource>-->
+<!--                  <cargo.jvmargs>-Xdebug -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n-->
+<!--                    -XX:+CMSClassUnloadingEnabled</cargo.jvmargs>-->
+<!--                </properties>-->
+<!--              </configuration>-->
+<!--              <skip>${skipTests}</skip>-->
+<!--            </configuration>-->
+<!--          </plugin>-->
+<!--        </plugins>-->
+<!--      </build>-->
+<!--    </profile>-->
 
     <profile>
       <id>wildfly</id>

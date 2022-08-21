@@ -85,31 +85,31 @@ under the License.
   <build>
 
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.cargo</groupId>
-        <artifactId>cargo-maven3-plugin</artifactId>
-        <inherited>true</inherited>
-        <configuration>
-          <container>
-            <containerId>tomcat9x</containerId>
-            <zipUrlInstaller>
-              <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>
-              <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
-              <extractDir>${project.build.directory}/cargo/extract</extractDir>
-            </zipUrlInstaller>
-            <timeout>300000</timeout>
-          </container>
-        </configuration>
-        <executions>
-          <execution>
-            <id>install-tomcat</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>install</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+<!--      <plugin>-->
+<!--        <groupId>org.codehaus.cargo</groupId>-->
+<!--        <artifactId>cargo-maven3-plugin</artifactId>-->
+<!--        <inherited>true</inherited>-->
+<!--        <configuration>-->
+<!--          <container>-->
+<!--            <containerId>tomcat9x</containerId>-->
+<!--            <zipUrlInstaller>-->
+<!--              <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>-->
+<!--              <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>-->
+<!--              <extractDir>${project.build.directory}/cargo/extract</extractDir>-->
+<!--            </zipUrlInstaller>-->
+<!--            <timeout>300000</timeout>-->
+<!--          </container>-->
+<!--        </configuration>-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <id>install-tomcat</id>-->
+<!--            <phase>prepare-package</phase>-->
+<!--            <goals>-->
+<!--              <goal>install</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
           
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -142,7 +142,7 @@ under the License.
                 <copy todir="${work.dir}/apache-tomcat-${tomcat.version}/webapps/syncope/WEB-INF/classes" overwrite="true">
                   <fileset dir="${project.build.outputDirectory}/core"/>
                 </copy>
-                <copy file="../fit/core-reference/target/test-classes/saml.keystore.jks" todir="${work.dir}/apache-tomcat-${tomcat.version}/webapps/syncope/WEB-INF/classes" overwrite="true"/>
+<!--                <copy file="../fit/core-reference/target/test-classes/saml.keystore.jks" todir="${work.dir}/apache-tomcat-${tomcat.version}/webapps/syncope/WEB-INF/classes" overwrite="true"/>-->
 
                 <!-- Syncope console -->
                 <copy todir="${work.dir}/apache-tomcat-${tomcat.version}/webapps/syncope-console">
@@ -169,7 +169,7 @@ under the License.
                 </copy>
 
                 <mkdir dir="${work.dir}/apache-tomcat-${tomcat.version}/${test.csvdir.path}"/>
-                <copy file="../fit/core-reference/src/test/resources/test.csv" todir="${work.dir}/apache-tomcat-${tomcat.version}/${test.csvdir.path}"/>
+<!--                <copy file="../fit/core-reference/src/test/resources/test.csv" todir="${work.dir}/apache-tomcat-${tomcat.version}/${test.csvdir.path}"/>-->
 
                 <!-- Syncope build tools (provide H2, Apache DS and REST / SOAP resources + ConnId connector server) -->
                 <copy todir="${work.dir}/apache-tomcat-${tomcat.version}/webapps/syncope-fit-build-tools">

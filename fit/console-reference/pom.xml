@@ -106,63 +106,63 @@ under the License.
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.cargo</groupId>
-        <artifactId>cargo-maven3-plugin</artifactId>
-        <inherited>true</inherited>
-        <configuration>
-          <container>
-            <containerId>tomcat9x</containerId>
-            <zipUrlInstaller>
-              <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>
-              <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>
-              <extractDir>${project.build.directory}/cargo/extract</extractDir>
-            </zipUrlInstaller>
-            <timeout>300000</timeout>
-            <log>${cargo.log}</log>
-            <output>${cargo.output}</output>
+<!--      <plugin>-->
+<!--        <groupId>org.codehaus.cargo</groupId>-->
+<!--        <artifactId>cargo-maven3-plugin</artifactId>-->
+<!--        <inherited>true</inherited>-->
+<!--        <configuration>-->
+<!--          <container>-->
+<!--            <containerId>tomcat9x</containerId>-->
+<!--            <zipUrlInstaller>-->
+<!--              <url>https://repo1.maven.org/maven2/org/apache/tomcat/tomcat/${tomcat.version}/tomcat-${tomcat.version}.zip</url>-->
+<!--              <downloadDir>${settings.localRepository}/org/codehaus/cargo/cargo-container-archives</downloadDir>-->
+<!--              <extractDir>${project.build.directory}/cargo/extract</extractDir>-->
+<!--            </zipUrlInstaller>-->
+<!--            <timeout>300000</timeout>-->
+<!--            <log>${cargo.log}</log>-->
+<!--            <output>${cargo.output}</output>-->
 
-            <systemProperties>
-              <java.security.egd>file:/dev/./urandom</java.security.egd>
-              <java.util.secureRandomSeed>true</java.util.secureRandomSeed>
+<!--            <systemProperties>-->
+<!--              <java.security.egd>file:/dev/./urandom</java.security.egd>-->
+<!--              <java.util.secureRandomSeed>true</java.util.secureRandomSeed>-->
 
-              <h2.returnOffsetDateTime>true</h2.returnOffsetDateTime>
-            </systemProperties>
-          </container>
-          <configuration>
-            <properties>
-              <cargo.jvmargs>
-                -Dspring.profiles.active=embedded,all
-                -XX:+CMSClassUnloadingEnabled -Xmx1024m -Xms512m</cargo.jvmargs>
-            </properties>
-          </configuration>
-          <deployables>
-            <deployable>
-              <groupId>org.apache.syncope.fit</groupId>
-              <artifactId>syncope-fit-build-tools</artifactId>
-              <type>war</type>
-              <properties>
-                <context>syncope-fit-build-tools</context>
-              </properties>
-            </deployable>
-            <deployable>
-              <location>${basedir}/../core-reference/target/syncope-fit-core-reference-${project.version}</location>
-              <pingURL>http://localhost:${cargo.servlet.port}/syncope/index.html</pingURL>
-              <pingTimeout>${cargo.deployable.ping.timeout}</pingTimeout>
-              <properties>
-                <context>syncope</context>
-              </properties>
-            </deployable>
-            <deployable>
-              <location>${project.build.directory}/${project.build.finalName}</location>
-              <properties>
-                <context>syncope-console</context>
-              </properties>
-            </deployable>
-          </deployables>
-        </configuration>
-      </plugin>
-      
+<!--              <h2.returnOffsetDateTime>true</h2.returnOffsetDateTime>-->
+<!--            </systemProperties>-->
+<!--          </container>-->
+<!--          <configuration>-->
+<!--            <properties>-->
+<!--              <cargo.jvmargs>-->
+<!--                -Dspring.profiles.active=embedded,all-->
+<!--                -XX:+CMSClassUnloadingEnabled -Xmx1024m -Xms512m</cargo.jvmargs>-->
+<!--            </properties>-->
+<!--          </configuration>-->
+<!--          <deployables>-->
+<!--            <deployable>-->
+<!--              <groupId>org.apache.syncope.fit</groupId>-->
+<!--              <artifactId>syncope-fit-build-tools</artifactId>-->
+<!--              <type>war</type>-->
+<!--              <properties>-->
+<!--                <context>syncope-fit-build-tools</context>-->
+<!--              </properties>-->
+<!--            </deployable>-->
+<!--            <deployable>-->
+<!--              <location>${basedir}/../core-reference/target/syncope-fit-core-reference-${project.version}</location>-->
+<!--              <pingURL>http://localhost:${cargo.servlet.port}/syncope/index.html</pingURL>-->
+<!--              <pingTimeout>${cargo.deployable.ping.timeout}</pingTimeout>-->
+<!--              <properties>-->
+<!--                <context>syncope</context>-->
+<!--              </properties>-->
+<!--            </deployable>-->
+<!--            <deployable>-->
+<!--              <location>${project.build.directory}/${project.build.finalName}</location>-->
+<!--              <properties>-->
+<!--                <context>syncope-console</context>-->
+<!--              </properties>-->
+<!--            </deployable>-->
+<!--          </deployables>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
+<!--      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-checkstyle-plugin</artifactId>
