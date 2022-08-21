@@ -504,7 +504,7 @@ under the License.
 
     <test.csvdir.path>${project.build.directory}/test-csvdir</test.csvdir.path>
 
-    <cargo.servlet.port>9080</cargo.servlet.port>
+    <cargo.servlet.port>9443</cargo.servlet.port>
     <cargo.tomcat.ajp.port>9889</cargo.tomcat.ajp.port>
     <cargo.rmi.port>9805</cargo.rmi.port>
     <cargo.deployable.ping.timeout>60000</cargo.deployable.ping.timeout>
