@@ -193,4 +193,50 @@ under the License.
       </resource>
     </resources>
   </build>
+  <profiles>
+    <!-- ISW2-PITest profile -->
+    <profile>
+      <id>mutation-coverage</id>
+
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <checkstyle.skip>true</checkstyle.skip>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.8.0</version>
+            <configuration>
+              <verbose>true</verbose>
+              <targetClasses>
+                <!-- classes to test  -->
+                <param>org.apache.syncope.core.spring.security.Encryptor</param><!-- class 1 to test -->
+                <param>org.apache.syncope.core.spring.security.AuthDataAccessor</param><!-- class 2 to test -->
+              </targetClasses>
+              <targetTests>
+                <!-- test implementations -->
+                <param>org.apache.syncope.core.spring.AuthDataAccessorAuthenticateTest</param>
+                <param>org.apache.syncope.core.spring.EncryptorVerifyTest</param>
+                <param>org.apache.syncope.core.spring.EncryptorDecodeTest</param>
+                <param>org.apache.syncope.core.spring.EncryptorEncodeTest</param>
+              </targetTests>
+            </configuration>
+            <executions>
+              <execution>
+                <id>Mutation Report</id>
+                <phase>test-compile</phase>
+                <goals>
+                  <goal>mutationCoverage</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

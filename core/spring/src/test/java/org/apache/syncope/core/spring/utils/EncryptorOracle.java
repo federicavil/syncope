@@ -55,7 +55,7 @@ public class EncryptorOracle {
                 try {
                     Cipher ciph = Cipher.getInstance("AES");
                     SecretKeySpec key = new SecretKeySpec(ArrayUtils.subarray(
-                            "1abcdefghilmnopqrstuvz2!".getBytes(StandardCharsets.UTF_8), 0, 16),
+                            getKey().getBytes(StandardCharsets.UTF_8), 0, 16),
                             CipherAlgorithm.AES.getAlgorithm());
                     ciph.init(Cipher.ENCRYPT_MODE,key);
                     encryptedString = Base64.getEncoder()

@@ -23,6 +23,10 @@ public class MyUser implements User {
         this.password = password;
     }
 
+    public MyUser(){
+
+    }
+
     @Override
     public OffsetDateTime getCreationDate() {
         return null;
@@ -250,7 +254,7 @@ public class MyUser implements User {
 
     @Override
     public void setPassword(String password) {
-
+        this.password = password;
     }
 
     @Override
@@ -265,7 +269,7 @@ public class MyUser implements User {
 
     @Override
     public void setSuspended(Boolean suspended) {
-
+        this.status = "SUSPENDED";
     }
 
     @Override

@@ -31,39 +31,13 @@ import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(Parameterized.class)
 public class AuthDataAccessorAuthenticateTest {
-    @Spy
-    private SecurityProperties securityProperties;
     @Mock
     private RealmDAO realmDAO;
     @Mock
     private UserDAO userDAO;
-    @Mock
-    private GroupDAO groupDAO;
-    @Mock
-    private AnyTypeDAO anyTypeDAO;
-    @Mock
-    private AnySearchDAO anySearchDAO;
-    @Mock
-    private AccessTokenDAO accessTokenDAO;
 
     private ConfParamOps confParamOps;
-    @Mock
-    private RoleDAO roleDAO;
-    @Mock
-    private DelegationDAO delegationDAO;
-    @Mock
-    private ConnectorManager connectorManager;
-    @Mock
-    private AuditManager auditManager;
-    @Mock
-    private MappingManager mappingManager;
-    @Mock
-    private ImplementationLookup implementationLookup;
-
-    private Map<String, JWTSSOProvider> jwtSSOProviders;
     private AuthDataAccessor authDataAccessor;
-
-    private UsernamePasswordAuthenticationProvider provider;
 
     private String domain;
     private Authentication auth;
@@ -72,49 +46,66 @@ public class AuthDataAccessorAuthenticateTest {
     private String password;
     private User userResult;
     private Boolean authenticationResult;
+    private boolean multipleFailedAttempts;
 
-    public AuthDataAccessorAuthenticateTest(String domain, UserType type, boolean isExceptionExpected){
-        configure(domain,type,isExceptionExpected);
+    public AuthDataAccessorAuthenticateTest(String domain, UserType type, boolean isExceptionExpected, boolean multipleFailedAttempts){
+        configure(domain,type,isExceptionExpected,multipleFailedAttempts);
     }
 
-    private void configure(String domain, UserType type, boolean isExceptionExpected){
+    private void configure(String domain, UserType type, boolean isExceptionExpected, boolean multipleFailedAttempts){
         this.domain = domain;
         this.isExceptionExpected = isExceptionExpected;
+        //Jacoco
+        this.multipleFailedAttempts = multipleFailedAttempts;
         username = "myUsername";
         password = "myPassword";
         userDAO = Mockito.mock(UserDAO.class);
-        User user = null;
+        User user = new MyUser();
+        if(multipleFailedAttempts){
+            user.setFailedLogins(1);
+        }
         switch(type){
             case NULL:
+                user = null;
                 auth = null;
                 break;
             case ACTIVEANDCORRECT:
-                user = new MyUser(username, EncryptorOracle.encode(password, CipherAlgorithm.SHA256));
+                user.setUsername(username);
+                user.setPassword(EncryptorOracle.encode(password,CipherAlgorithm.SHA256));
                 authenticationResult = true;
                 Mockito.when(userDAO.findByUsername(any())).thenReturn(user);
                 break;
             case ACTIVEANDWRONG:
-                user = new MyUser(username, EncryptorOracle.encode("wrongpassword", CipherAlgorithm.SHA256));
+                user.setUsername(username);
+                user.setPassword(EncryptorOracle.encode("wrongpassword",CipherAlgorithm.SHA256));
                 authenticationResult = false;
                 Mockito.when(userDAO.findByUsername(any())).thenReturn(user);
                 break;
             case SUSPENDED:
-                user = new MyUser(username, EncryptorOracle.encode(password, CipherAlgorithm.SHA256));
-                user.setStatus("SUSPENDED");
+                user.setUsername(username);
+                user.setPassword(EncryptorOracle.encode(password,CipherAlgorithm.SHA256));
+                user.setSuspended(true);
                 authenticationResult = false;
                 Mockito.when(userDAO.findByUsername(any())).thenReturn(user);
                 break;
             case NOTEXISTENT:
+                user = null;
                 authenticationResult = null;
                 Mockito.when(userDAO.findByUsername(any())).thenReturn(null);
                 break;
-
+            case UNKNOWN:
+                user.setUsername(username);
+                user.setPassword(EncryptorOracle.encode(password,CipherAlgorithm.SHA256));
+                user.setStatus("UNKNOWN");
+                authenticationResult = false;
+                Mockito.when(userDAO.findByUsername(any())).thenReturn(user);
+                break;
         }
         userResult = user;
         // Mock ConfParamOps
         confParamOps = Mockito.mock(ConfParamOps.class);
         Mockito.when(confParamOps.get(anyString(),eq("authentication.attributes"),any(),any())).thenReturn(new String[]{"username"});
-        Mockito.when(confParamOps.get(any(),eq("authentication.statuses"),any(),any())).thenReturn(new String[]{"ACTIVE"});
+        Mockito.when(confParamOps.get(any(),eq("authentication.statuses"),any(),any())).thenReturn(new String[]{"ACTIVE","SUSPENDED"});
         Mockito.when(confParamOps.get(any(),eq("log.lastlogindate"),any(),any())).thenReturn(true);
         // Mock authentication
         auth = Mockito.mock(Authentication.class);
@@ -131,18 +122,21 @@ public class AuthDataAccessorAuthenticateTest {
     @Parameterized.Parameters
     public static Collection<Object[]> getTestParameters() {
         return Arrays.asList(new Object[][]{
-                {null,      UserType.NULL,              true},
-                {null,      UserType.ACTIVEANDCORRECT,  true},
-                {"Master",  UserType.NULL,              false},
-                {"Master",  UserType.NOTEXISTENT,       false},
-                {"Master",  UserType.ACTIVEANDCORRECT,  false},
-                {"Master",  UserType.ACTIVEANDWRONG,    false},
-                {"Master",  UserType.SUSPENDED,         true},
-                {"Domain1",  UserType.NULL,              false},
-                {"Domain1",  UserType.NOTEXISTENT,       false},
-                {"Domain1",  UserType.ACTIVEANDCORRECT,  false},
-                {"Domain1",  UserType.ACTIVEANDWRONG,    false},
-                {"Domain1",  UserType.SUSPENDED,         true},
+                {null,      UserType.NULL,              true,   false},
+                {null,      UserType.ACTIVEANDCORRECT,  true,   false},
+                {"Master",  UserType.NULL,              false,   false},
+                {"Master",  UserType.NOTEXISTENT,       false,   false},
+                {"Master",  UserType.ACTIVEANDCORRECT,  false,   false},
+                {"Master",  UserType.ACTIVEANDWRONG,    false,   false},
+                {"Master",  UserType.SUSPENDED,         true,   false},
+                {"Domain1",  UserType.NULL,              false,   false},
+                {"Domain1",  UserType.NOTEXISTENT,       false,   false},
+                {"Domain1",  UserType.ACTIVEANDCORRECT,  false,   false},
+                {"Domain1",  UserType.ACTIVEANDWRONG,    false,   false},
+                {"Domain1",  UserType.SUSPENDED,         true,   false},
+                // Jacoco
+                {"Master",   UserType.UNKNOWN,          true,   false},
+                {"Master",  UserType.ACTIVEANDCORRECT,  false,   true},
         });
     }
 
@@ -169,6 +163,7 @@ public class AuthDataAccessorAuthenticateTest {
         ACTIVEANDCORRECT,
         ACTIVEANDWRONG,
         SUSPENDED,
-        NOTEXISTENT
+        NOTEXISTENT,
+        UNKNOWN
     }
 }
