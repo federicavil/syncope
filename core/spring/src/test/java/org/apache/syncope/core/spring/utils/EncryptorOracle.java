@@ -17,18 +17,25 @@ import java.util.Base64;
 
 public class EncryptorOracle {
 
-    private static final String key = "dfe0855edfmsh485836b5158bba7p10f2ddjsn68761a02af10";
+    private static final String key = "dfe0855edfmsh485";
 
     public static boolean verify(String plainText, String cipherText, CipherAlgorithm cipher){
+        return verify(plainText,cipherText,cipher,key);
+    }
+
+    public static boolean verify(String plainText, String cipherText, CipherAlgorithm cipher, String key){
         switch(cipher){
             case BCRYPT:
                 return BCrypt.verifyer().verify(plainText.toCharArray(), cipherText).verified;
             default:
-                return encode(plainText,cipher).equalsIgnoreCase(cipherText);
+                return encode(plainText,cipher,key).equalsIgnoreCase(cipherText);
         }
     }
-
     public static String encode(String plainText, CipherAlgorithm cipher){
+        return encode(plainText,cipher,key);
+    }
+
+    public static String encode(String plainText, CipherAlgorithm cipher,String key){
         String encryptedString = null;
         switch(cipher){
             case SMD5:
@@ -54,10 +61,10 @@ public class EncryptorOracle {
             case AES:
                 try {
                     Cipher ciph = Cipher.getInstance("AES");
-                    SecretKeySpec key = new SecretKeySpec(ArrayUtils.subarray(
+                    SecretKeySpec speckey = new SecretKeySpec(ArrayUtils.subarray(
                             getKey().getBytes(StandardCharsets.UTF_8), 0, 16),
                             CipherAlgorithm.AES.getAlgorithm());
-                    ciph.init(Cipher.ENCRYPT_MODE,key);
+                    ciph.init(Cipher.ENCRYPT_MODE,speckey);
                     encryptedString = Base64.getEncoder()
                             .encodeToString(ciph.doFinal(plainText.getBytes(StandardCharsets.UTF_8)));
                 } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
@@ -72,5 +79,6 @@ public class EncryptorOracle {
     public static String getKey(){
         return key;
     }
+
 
 }

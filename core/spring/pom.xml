@@ -215,14 +215,16 @@ under the License.
               <targetClasses>
                 <!-- classes to test  -->
                 <param>org.apache.syncope.core.spring.security.Encryptor</param><!-- class 1 to test -->
-                <param>org.apache.syncope.core.spring.security.AuthDataAccessor</param><!-- class 2 to test -->
+<!--                <param>org.apache.syncope.core.spring.security.AuthDataAccessor</param>&lt;!&ndash; class 2 to test &ndash;&gt;-->
               </targetClasses>
               <targetTests>
                 <!-- test implementations -->
-                <param>org.apache.syncope.core.spring.AuthDataAccessorAuthenticateTest</param>
+<!--                <param>org.apache.syncope.core.spring.AuthDataAccessorAuthenticateTest</param>-->
+                <param>org.apache.syncope.core.spring.EncryptorTest</param>
                 <param>org.apache.syncope.core.spring.EncryptorVerifyTest</param>
                 <param>org.apache.syncope.core.spring.EncryptorDecodeTest</param>
                 <param>org.apache.syncope.core.spring.EncryptorEncodeTest</param>
+                <param>org.apache.syncope.core.spring.EncryptorConstructorTest</param>
               </targetTests>
             </configuration>
             <executions>
