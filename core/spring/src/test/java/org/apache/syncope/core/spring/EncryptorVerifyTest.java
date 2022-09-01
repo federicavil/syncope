@@ -42,12 +42,17 @@ public class EncryptorVerifyTest extends EncryptorTest{
             case NOTCORRESPONDING:
                 this.encoded = EncryptorOracle.encode("not "+ this.value, this.cipher);
                 break;
+            case CIPHERNOTCORRESPONDING:
+                this.cipher = CipherAlgorithm.BCRYPT;
+                this.encoded = EncryptorOracle.encode(this.value,cipher);
+                break;
         }
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> getTestParameters() {
         return Arrays.asList(new Object[][]{
+                // Value     Encoded                          Algoritmo per encoded     isExceptionExpected
                 { null,      VerifyEncodedType.NULL,          null,                     true},
                 { null,      VerifyEncodedType.NULL,          CipherAlgorithm.SHA,      true},
                 { null,      VerifyEncodedType.NULL,          CipherAlgorithm.SHA1,     true},
@@ -83,6 +88,16 @@ public class EncryptorVerifyTest extends EncryptorTest{
                 { "test",    VerifyEncodedType.NOTCORRESPONDING, CipherAlgorithm.SSHA256,  false},
                 { "test",    VerifyEncodedType.NOTCORRESPONDING, CipherAlgorithm.SSHA512,  false},
                 { "test",    VerifyEncodedType.NOTCORRESPONDING, CipherAlgorithm.AES,      false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SHA,      false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SHA1,     false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SHA256,   false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SHA512,   false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SMD5,     false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SSHA,     false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SSHA1,    false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SSHA256,  false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.SSHA512,  false},
+                { "test",    VerifyEncodedType.CIPHERNOTCORRESPONDING, CipherAlgorithm.AES,      false},
 
         });
     }
@@ -108,6 +123,7 @@ public class EncryptorVerifyTest extends EncryptorTest{
     public enum VerifyEncodedType{
         NULL,
         CORRESPONDING,
-        NOTCORRESPONDING
+        NOTCORRESPONDING,
+        CIPHERNOTCORRESPONDING
     }
 }

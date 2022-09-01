@@ -23,9 +23,9 @@ public class EncryptorConstructorTest {
     public static Collection<Object[]> getTestParameters() {
         return Arrays.asList(new Object[][]{
                 {null},
-                {"123"},
-                {"1234567891011213"},
-                {"1234567891011121314"}
+                {"123456789101112"},
+                {"1234567891011121"},
+                {"12345678910111213"}
 
         });
     }

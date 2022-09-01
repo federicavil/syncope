@@ -53,7 +53,15 @@ public class AuthDataAccessorAuthenticateTest {
         username = "myUsername";
         password = "myPassword";
         userDAO = Mockito.mock(UserDAO.class);
+        // Mock authentication
+        auth = Mockito.mock(Authentication.class);
+        Mockito.when(auth.getName()).thenReturn(username);
+        Mockito.when(auth.getCredentials()).thenReturn(password);
+        Mockito.when(auth.getDetails()).thenReturn(new SyncopeAuthenticationDetails(domain, null));
+
         User user = new MyUser();
+        user.setUsername(username);
+        user.setPassword(EncryptorOracle.encode(password, CipherAlgorithm.SHA256));
 
         switch (type) {
             case NULL:
@@ -61,18 +69,13 @@ public class AuthDataAccessorAuthenticateTest {
                 auth = null;
                 break;
             case ACTIVEANDCORRECT:
-                user.setUsername(username);
-                user.setPassword(EncryptorOracle.encode(password, CipherAlgorithm.SHA256));
                 authenticationResult = true;
                 break;
             case ACTIVEANDWRONG:
-                user.setUsername(username);
-                user.setPassword(EncryptorOracle.encode("wrongpassword", CipherAlgorithm.SHA256));
+                Mockito.when(auth.getCredentials()).thenReturn("wrongPassword");
                 authenticationResult = false;
                 break;
             case SUSPENDED:
-                user.setUsername(username);
-                user.setPassword(EncryptorOracle.encode(password, CipherAlgorithm.SHA256));
                 user.setSuspended(true);
                 authenticationResult = false;
                 break;
@@ -82,14 +85,10 @@ public class AuthDataAccessorAuthenticateTest {
                 break;
             // Jacoco
             case UNKNOWNSTATUS:
-                user.setUsername(username);
-                user.setPassword(EncryptorOracle.encode(password, CipherAlgorithm.SHA256));
                 user.setStatus("UNKNOWN");
                 authenticationResult = false;
                 break;
             case MULTIPLEFAILEDATTEMPTS:
-                user.setUsername(username);
-                user.setPassword(EncryptorOracle.encode(password, CipherAlgorithm.SHA256));
                 user.setFailedLogins(1);
                 authenticationResult = true;
                 break;
@@ -103,11 +102,6 @@ public class AuthDataAccessorAuthenticateTest {
         Mockito.when(confParamOps.get(anyString(), eq("authentication.attributes"), any(), any())).thenReturn(new String[]{"username"});
         Mockito.when(confParamOps.get(any(), eq("authentication.statuses"), any(), any())).thenReturn(new String[]{"ACTIVE", "SUSPENDED"});
         Mockito.when(confParamOps.get(any(), eq("log.lastlogindate"), any(), any())).thenReturn(true);
-        // Mock authentication
-        auth = Mockito.mock(Authentication.class);
-        Mockito.when(auth.getName()).thenReturn(username);
-        Mockito.when(auth.getCredentials()).thenReturn(password);
-        Mockito.when(auth.getDetails()).thenReturn(new SyncopeAuthenticationDetails(domain, null));
         // Mock RealmDAO
         realmDAO = Mockito.mock(RealmDAO.class);
         Realm mockRealm = Mockito.mock(Realm.class);
@@ -123,16 +117,11 @@ public class AuthDataAccessorAuthenticateTest {
         return Arrays.asList(new Object[][]{
                 {null,      UserType.NULL,              true},
                 {null,      UserType.ACTIVEANDCORRECT,  true},
-                {"Master",  UserType.NULL,              false},
+                {"Master",  UserType.NULL,              true},
                 {"Master",  UserType.NOTEXISTENT,       false},
                 {"Master",  UserType.ACTIVEANDCORRECT,  false},
                 {"Master",  UserType.ACTIVEANDWRONG,    false},
                 {"Master",  UserType.SUSPENDED,         true},
-                {"Domain1",  UserType.NULL,              false},
-                {"Domain1",  UserType.NOTEXISTENT,       false},
-                {"Domain1",  UserType.ACTIVEANDCORRECT,  false},
-                {"Domain1",  UserType.ACTIVEANDWRONG,    false},
-                {"Domain1",  UserType.SUSPENDED,         true},
                 // Jacoco
                 {"Master",  UserType.UNKNOWNSTATUS,      true},
                 {"Master",  UserType.MULTIPLEFAILEDATTEMPTS,  false},
