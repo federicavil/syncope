@@ -20,7 +20,6 @@ public class EncryptorTest {
     @BeforeClass
     public static void setUp(){
         encryptor = Encryptor.getInstance(EncryptorOracle.getKey());
-        // Pit
         Assert.assertNotNull(encryptor);
 
         SecurityProperties securityProperties = new SecurityProperties();
